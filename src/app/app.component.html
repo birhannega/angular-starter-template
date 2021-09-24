@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
+  <div class="container">
     <a class="navbar-brand"
       href="#">Navbar</a>
     <button class="navbar-toggler"
@@ -30,21 +30,23 @@
     </div>
   </div>
 </nav>
-<div class="container">
+<div class="container ">
+  <!-- Department card -->
 
-  <div class="card py mt-3">
+  <div class="card noprint   mt-3">
     <div class="card-body">
       <div class="row">
-        <div class="col">
-          <h3 class="text-success">List of Departments</h3>
-          <ol class="list-group">
+        <div class="col ">
+          <h4 class="text-success">List of Departments</h4>
+          <ol class="list-group"
+            *ngIf="departments!=null">
             <li class="list-group-item"
               *ngFor="let dept of departments">
               {{dept.departmentName}}
             </li>
           </ol>
         </div>
-        <div class="col">
+        <div class="col ">
           <form [formGroup]="departmentForm"
             (ngSubmit)="SaveDepartment()">
 
@@ -62,7 +64,6 @@
 
             <button type="submit"
               [disabled]="departmentForm.invalid"
-              (submit)=SaveDepartment()
               class="align-right btn btn-success">Create department</button>
 
           </form>
@@ -72,14 +73,111 @@
     </div>
   </div>
 
-  <div class="card  mt-1">
+  <!-- Employee card -->
+  <div class="card   mt-1">
     <div class="card-body">
-      <h3 class="text-warning">List of Employees</h3>
-      <ul>
-        <li *ngFor="let employee of employees">
-          {{employee.firstName}}
-        </li>
-      </ul>
+      <div class="row">
+        <div class="col col-sm-12 col-md-8">
+          <h4 class="text-warning">List of Employees</h4>
+
+
+
+          <button class="btn btn-secondary"
+            (click)="printTable()">Print data</button>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Full name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">BirthDate</th>
+                <th scope="col">Department</th>
+                <th scope="col">Actions</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of employees">
+                <td scope="row">{{employee.id}}</td>
+                <td>{{employee.firstName}} {{employee.lastName}}</td>
+                <td>{{employee.gender}}</td>
+                <td>{{employee.birthDate | date: 'dd-MM-Y'}}</td>
+                <td>{{employee.vDepartment.departmentName}}</td>
+                <td>
+
+                  <button (click)="PopulateDatatoForm(employee)"
+                    class="btn btn-sm btn-warning mx-1">Edit</button>
+                  <button class="btn btn-sm btn-danger">delete</button>
+                </td>
+
+              </tr>
+
+            </tbody>
+          </table>
+
+
+        </div>
+        <div class="col noprint col-sm-12 col-md-4">
+
+          <form [formGroup]="employeeForm">
+
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text"
+                class="form-control"
+                formControlName="FirstName">
+            </div>
+
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text"
+                class="form-control"
+                formControlName="LastName">
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select class="form-control"
+                formControlName="Gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Department </label>
+              <select class="form-control"
+                formControlName="DepartmentId">
+                <option *ngFor="let dept of departments"
+                  [value]="dept.departmentId">{{dept.departmentName}}</option>
+
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Birth date </label>
+              <input type="date"
+                class="form-control"
+                formControlName="BirthDate">
+            </div>
+            <div class="  px-3 py-3">
+              <button type="submit"
+                (click)=SaveEmployee()
+                *ngIf="CreateMode==true"
+                class="btn btn-success">create employee
+              </button>
+
+              <button *ngIf="CreateMode==false"
+                type="submit"
+                (click)=UpdateEmployee()
+                class="
+                btn
+                btn-warning"> update employee
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
